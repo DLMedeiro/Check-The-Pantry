@@ -50,6 +50,7 @@ Project Proposal:
                 - Logged in users navbar:
                     - Logout option - logs out user and directs back to homepage
                     - Favorites
+                    - Profile
             A2: Login:
                 - Login form with username and password. Directs back to homepage on completion
                 - Register Link directing to a register form
@@ -67,8 +68,18 @@ Project Proposal:
                     - View comments.  Delete / edit option for user comments only
                     - Favorites status: Add to favorites / Remove from favorites based on current state. Does not redirect
                     - Add comment. Directs to comment form.
-            A6: Add Comment:
+            A6a: Add Comment:
                 - Form including: text, submit, cancel.  Directs back to detail page of recipe on completion or cancel.
+                A6b: Edit Comment:
+                A6c: Delete Comment:
+            A8: Profile:
+                - Lists user information.
+                - Edit profile - directs to edit profile form
+                - Delete Account - deletes account record and directs to homepage
+            A9: Edit Profile:
+                - Update user information form
+                - Save changes - redirects to Profile page
+                - Delete Account - deletes account record / comments / favorites and directs to homepage
 
         f. What features make your site more than CRUD? Do you have any stretch
         goals?

@@ -1,3 +1,5 @@
+from crypt import methods
+from socket import recv_fds
 from wsgiref.util import application_uri
 import requests
 import os
@@ -7,8 +9,8 @@ from flask import Flask, render_template, request, flash, redirect, session, g, 
 from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy.exc import IntegrityError
 
-from forms import UserAddForm, LoginForm, RecipeSearch
-from models import db, connect_db, User, Favorites
+from forms import UserAddForm, LoginForm, RecipeSearch, CommentForm
+from models import db, connect_db, User, Favorites, Comment_Recipe, Comment_User
 
 CURR_USER_KEY = "curr_user"
 
@@ -203,14 +205,34 @@ def favorites(recipe_id):
 
 # Comments
 
-@app.route('/add_comments')
-def add_comment():
+@app.route('/<int:rec_id>/add_comments', methods = ['GET','POST'])
+def add_comment(rec_id):
     """if / else for logged in users"""
     """connect to user recipe id"""
     """create comment"""
     """redirect to recipe detail page"""
 
-    return render_template('comment_add.html')
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
+
+    form = CommentForm()
+
+    if form.validate_on_submit():
+        rec_comment = Comment_Recipe(comment_text=form.text.data, recipe_id = rec_id)
+        user_comment = Comment_User(user_id = g.user.id, comment_id = rec_comment.id)
+        db.session.add(rec_comment, user_comment)
+        db.session.commit()
+
+    # if form.validate_on_submit():
+    #     comment = Comment_User(comment_text=form.text.data, user_id = g.user)
+    #     g.user.u_comments.append(comment)
+    #     db.session.commit()
+
+        # return redirect(f'/details/{recipe_id}')
+        return redirect(f'/details/{rec_id}')
+
+    return render_template('comment_add.html', form = form)
 
 @app.route('/edit_comments')
 def edit_comment():

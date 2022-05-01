@@ -44,6 +44,8 @@ class User(db.Model):
         nullable=False,
     )
 
+    favorites = db.relationship('Favorites')
+
     @classmethod
     def signup(cls, email, username, password):
         """Sign up user.
@@ -81,3 +83,64 @@ class User(db.Model):
                 return user
 
         return False
+
+
+class Favorites(db.Model):
+    """Mapping user favorites to recipes."""
+
+    __tablename__ = 'favorites' 
+
+    id = db.Column(
+        db.Integer,
+        primary_key=True
+    )
+
+    user_id = db.Column(
+        db.Integer,
+        db.ForeignKey('users.id', ondelete='cascade')
+    )
+
+    recipe_id = db.Column(
+        db.Integer
+    )
+
+class Comment_user(db.Model):
+    """Mapping users to comments"""
+
+    __tablename__ = 'comments_users' 
+
+    id = db.Column(
+        db.Integer,
+        primary_key=True
+    )
+
+    comment_text = db.Column(
+        db.Text,
+        nullable=False,
+        unique=False
+    )
+
+    user_id = db.Column(
+        db.Integer,
+        db.ForeignKey('users.id', ondelete='cascade')
+    )
+
+class Comment_Recipe(db.Model):
+    """Mapping comments to recipies"""
+
+    __tablename__ = 'comments_recipies' 
+
+    id = db.Column(
+        db.Integer,
+        primary_key=True
+    )
+
+    user_id = db.Column(
+        db.Integer,
+        db.ForeignKey('users.id', ondelete='cascade')
+    )
+
+    recipe_id = db.Column(
+        db.Integer
+    )
+    

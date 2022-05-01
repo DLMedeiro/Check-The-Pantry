@@ -20,3 +20,8 @@ class RecipeSearch(FlaskForm):
     """Form for initiating a search query"""
 
     Ingredient = StringField('Ingredient', validators=[DataRequired()])
+
+class CommentForm(FlaskForm):
+    """Form for adding/editing comments."""
+
+    text = TextAreaField('text', validators=[DataRequired()])

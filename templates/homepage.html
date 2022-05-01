@@ -10,7 +10,7 @@
     <div class="col-md-7 col-lg-5">
       <h2 class="join-message">What's for dinner????</h2>
 
-      <form id="user_form">
+      <form id="search_form">
         {{ form.hidden_tag() }}
 
             {% for field in form if field.widget.input_type != 'hidden' %}
@@ -28,16 +28,31 @@
 <div class="row justify-content-md-center">
     <div class="col-md-7 col-lg-5">
         <h2 class="join-message">Search Results</h2>
-            <ul id = "search-results"></ul>
-        <!-- {%for r in res%}
-            <ul>
-                <li>
-                    <a href="/details/{{r['id']}}"></a>{{r['title']}}</a>
-                    <img src="{{r['image']}}" alt="{{r['title']}}">
-                </li>
-            <ul>
-        {%endfor%} -->
+            <div>
+                <div id = "search-results"></div>
+                <div>
+                    <!-- 
+                        If recipe.id is in user.favorites:
+                            form/button = "Remove from Favorites"
+                        Else: 
+                            form/button = "Add to Favotires"
+                    -->
+<!-- 
+                    <form method="POST" action="/users/add_favrite/ recipe.id " id="messages-form">
+                        <button class="
+                          btn 
+                          btn-sm 
+                          'btn-primary' if msg.id in likes else 'btn-secondary'"
+                        >
+                          <i class="fa fa-thumbs-up"></i> 
+                        </button>
+                    </form> -->
+
+                </div>
+            </div>
     </div>
 </div>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="/static/recipe.js"></script>
 
 {% endblock %}

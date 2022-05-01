@@ -1,3 +1,7 @@
+Things to do:
+Authentication on pages
+API key private
+
 Project Proposal:
 
     1. What goal will your website be designed to achieve?

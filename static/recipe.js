@@ -1,14 +1,13 @@
-const searchForm = document.querySelector("#user_form")
+const apiKey = '5d8f7026a537498bbe01acca5806b301'
+const searchForm = document.getElementById('search_form')
 
+// Homepage search results
 function searchHtml(r){
     return `
-        <div>
-            <li>
-                <h4>${r.title}</h4>
-                <a href="/details/${r.id}">             
-                    <img src="${r.image}" alt="${r.title}">
-                </a>
-            </li>
+        <a href="/details/${r.id}">             
+            <h4>${r.title}</h4>
+            <img src="${r.image}" alt="${r.title}">
+        </a>
     `;
 }
 
@@ -21,16 +20,13 @@ searchForm.addEventListener("submit", function(e){
 
 async function getResults(q) {
     
-    const response = await axios.get("https://api.spoonacular.com/recipes/findByIngredients", {params: {'apiKey': 'e3e74bc5b1e646ae8888b3f7dca142f6','ingredients': q, 'number': '2'}});
+    const response = await axios.get("https://api.spoonacular.com/recipes/findByIngredients", {params: {'apiKey': apiKey,'ingredients': q, 'number': '2'}});
 
     for (let r of response.data) {
         let lineItem = $(searchHtml(r));
         $("#search-results").append(lineItem)
         console.log(r['[title]'])
     }
-
     console.log(response.data)
-
-
 }
 

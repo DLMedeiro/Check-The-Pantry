@@ -3,12 +3,12 @@ import requests
 import os
 from types import MethodDescriptorType
 
-from flask import Flask, render_template, request, flash, redirect, session, g
+from flask import Flask, render_template, request, flash, redirect, session, g, abort
 from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy.exc import IntegrityError
 
 from forms import UserAddForm, LoginForm, RecipeSearch
-from models import db, connect_db, User
+from models import db, connect_db, User, Favorites
 
 CURR_USER_KEY = "curr_user"
 
@@ -22,6 +22,8 @@ app.config['SQLALCHEMY_ECHO'] = False
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', "it's a secret")
 toolbar = DebugToolbarExtension(app)
+
+apiKey = '5d8f7026a537498bbe01acca5806b301'
 
 connect_db(app)
 
@@ -112,89 +114,93 @@ def logout():
 
 @app.route('/')
 def homepage():
+    """Show list of top recipes - navigate to details page for each"""
     form = RecipeSearch()
-    # if form.validate_on_submit():
-    #     try:
-    #         search_q = request.params['Ingredient']
-            
-    #         api_url = 'https://api.spoonacular.com/recipes/findByIngredients'
-    #         res = requests.get(api_url, params={'apiKey': 'e3e74bc5b1e646ae8888b3f7dca142f6','ingredients': search_q, 'number': '2'})
 
-    #     except IntegrityError as e:
-    #         flash("No results for your search", 'danger')
-    #         return render_template('homepage.html', form = form)
-
-        # return redirect("/")
-
-    # else:
     return render_template('homepage.html', form = form)
 
-# Additional Features
 
-@app.route('/favorites')
-def favorites():
-    """no access if not logged in"""
-    """connect to user id"""
-    """list recipes connected to user"""
-    """remove from favories list"""
 
-    return render_template('favorites.html')
     
 # @app.route('/details')
 # def details():
-#     """if / else for logged in users"""
-#     """connect to user recipe id"""
-#     """list recipes ingredients and instructions"""
-#     """add / remove from favories list"""
-#     """view / add / edit comments"""
+
 
 #     return render_template('details.html')
 
-@app.route('/details')
-def details():
-    """Non user access vs user access"""
-    """Show list of top recipes - navigate to details page for each"""
-    """Show if recipe is on favories list - if logged in"""
-
-    api_url = 'https://api.spoonacular.com/recipes/findByIngredients'
-    response = requests.get(api_url, params={'apiKey': 'e3e74bc5b1e646ae8888b3f7dca142f6','ingredients': 'chicken', 'number': '2'})
-
-    instr_api_url = 'https://api.spoonacular.com/recipes/665734/analyzedInstructions'
-    response2 = requests.get(instr_api_url, params={'apiKey': 'e3e74bc5b1e646ae8888b3f7dca142f6'})
-    
-    ingr_api_url = 'https://api.spoonacular.com/recipes/665734/information'
-    response3 = requests.get(ingr_api_url, params={'apiKey': 'e3e74bc5b1e646ae8888b3f7dca142f6', 'includeNutrition':'false'})
-    
-
-    if response.status_code == requests.codes.ok:
-        res = response.json()
-        res2 = response2.json()
-        res3 = response3.json()
-            
-    else:
-        res = ("Error:", response.status_code, response.text)
-
-    return render_template('details.html', res = res, res2=res2, res3 = res3)
 
 @app.route('/details/<rec_id>')
 def rec_details(rec_id):
     """Non user access vs user access"""
-    """Show list of top recipes - navigate to details page for each"""
+
     """Show if recipe is on favories list - if logged in"""
+    """connect to user recipe id"""
+    """list recipes ingredients and instructions"""
+    """add / remove from favories list"""
+    """view / add / edit comments"""
 
-    response2 = requests.get(f"https://api.spoonacular.com/recipes/{rec_id}/analyzedInstructions", params={'apiKey': 'e3e74bc5b1e646ae8888b3f7dca142f6'})
+    response2 = requests.get(f"https://api.spoonacular.com/recipes/{rec_id}/analyzedInstructions", params={'apiKey': apiKey})
     
-    response3 = requests.get(f"https://api.spoonacular.com/recipes/{rec_id}/information", params={'apiKey': 'e3e74bc5b1e646ae8888b3f7dca142f6', 'includeNutrition':'false'})
+    response3 = requests.get(f"https://api.spoonacular.com/recipes/{rec_id}/information", params={'apiKey': apiKey, 'includeNutrition':'false'})
     
-
-    # if response2.status_code == requests.codes.ok:
     res2 = response2.json()
     res3 = response3.json()
-            
-    # else:
-    #     res2 = ("Error:", response2.status_code, response2.text)
 
-    return render_template('details2.html', res2=res2, res3 = res3)
+    favorites = (Favorites.query.all())
+    user_favs = [favorites.recipe_id for favorites in g.user.favorites]
+
+    return render_template('details.html', res2=res2, res3 = res3,favorites = favorites, user_favs = user_favs )
+
+# Favorites
+@app.route('/users/<int:user_id>/favorites', methods=["GET"])
+def show_favorites(user_id):
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
+
+    user = User.query.get_or_404(user_id)
+
+    favs_rec_id_list = [favorites.recipe_id for favorites in g.user.favorites]
+
+    fav_resp = []
+
+    for id in favs_rec_id_list:
+        response3 = requests.get(f"https://api.spoonacular.com/recipes/{id}/information", params={'apiKey': apiKey, 'includeNutrition':'false'})
+        res3 = response3.json()
+        fav_resp.append(res3)
+
+    return render_template('favorites.html', user=user,fav_resp = fav_resp, favs_rec_id_list=favs_rec_id_list)
+
+@app.route('/details/<int:recipe_id>', methods=['POST'])
+def favorites(recipe_id):
+    """no access if not logged in"""
+    """connect to user id"""
+    """list recipes connected to user"""
+    """remove from favories list"""
+    """Toggle a liked message for the currently-logged-in user."""
+
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
+
+    favorites_rec_ids = [favorites.recipe_id for favorites in g.user.favorites]
+
+    del_f = Favorites.query.filter(Favorites.user_id == g.user.id, Favorites.recipe_id == recipe_id).all()
+
+    if recipe_id in favorites_rec_ids:
+        for f in del_f:
+            db.session.delete(f)
+        
+    else:
+        new_f = Favorites(user_id = g.user.id, recipe_id = recipe_id)
+        g.user.favorites.append(new_f)
+
+    db.session.commit()
+
+    return redirect(f'/details/{recipe_id}')
+
+
+
 # Comments
 
 @app.route('/add_comments')

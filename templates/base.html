@@ -43,7 +43,7 @@
       <li>
         <a href="/users/{{ g.user.id }}">{{ g.user.username }}'s Profile</a>
       </li>
-      <li><a href="/favorites">Favorites</a></li>
+      <li><a href="/users/{{ g.user.id }}/favorites">Favorites</a></li>
       <li><a href="/logout">Log out</a></li>
       {% endif %}
     </ul>
@@ -59,7 +59,6 @@
 
 </div>
 <!-- <script src="http://unpkg.com/axios/dist/axios.js"></script> -->
-<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<script src="/static/recipe.js"></script>
+
 </body>
 </html>

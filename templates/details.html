@@ -10,10 +10,12 @@
 <!-- edit / remove comment -->
 
 
-{%for r in res%}
+{%for r in res2%}
 <ul>
     <li>
-        <h2>Recipe Name: {{r['title']}}</h2>
+        <h2>Recipe Name: {{res3['title']}}</h2>
+
+        <img src="{{res3['image']}}" alt="">
         
         <h2>Ingredients</h2>
             {%for i in res3.extendedIngredients%}
@@ -33,5 +35,20 @@
             {%endfor%}
     </li>
 </ul>
+
+<!-- Favorites -->
+{{res3['id']}}
+
+    <form method="POST" action="" class="fav_recipies">
+            <button class="
+                btn 
+                btn-sm
+                {{'btn-primary' if res3['id'] in user_favs else 'btn-secondary'}}"
+            </button>
+            <i class="fa fa-thumbs-up"></i> 
+    </form>
+
+<!-- Comments -->
+
 {%endfor%}
 {% endblock %}

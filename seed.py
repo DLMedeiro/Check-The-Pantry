@@ -3,6 +3,11 @@
 from models import User
 from app import db
 
+from flask_bcrypt import Bcrypt
+
+
+bcrypt = Bcrypt()
+
 # (venv) python seed.py
 
 #Create tables
@@ -13,10 +18,18 @@ db.create_all()
 User.query.delete()
 
 #Create User
-taco = User(email = 'taco@gamil.com', username = 'taco', password = 'taco')
+
+hashed_pwd = bcrypt.generate_password_hash('TacoTaco').decode('UTF-8')
+
+user = User(
+        email='taco@gamil.com',
+        username='taco',
+        password=hashed_pwd
+    )
+
 
 # Add new user object to the session
-db.session.add(taco)
+db.session.add(user)
 
 
 # Commit 

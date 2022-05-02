@@ -104,43 +104,4 @@ class Favorites(db.Model):
         db.Integer
     )
 
-class Comment_user(db.Model):
-    """Mapping users to comments"""
-
-    __tablename__ = 'comments_users' 
-
-    id = db.Column(
-        db.Integer,
-        primary_key=True
-    )
-
-    comment_text = db.Column(
-        db.Text,
-        nullable=False,
-        unique=False
-    )
-
-    user_id = db.Column(
-        db.Integer,
-        db.ForeignKey('users.id', ondelete='cascade')
-    )
-
-class Comment_Recipe(db.Model):
-    """Mapping comments to recipies"""
-
-    __tablename__ = 'comments_recipies' 
-
-    id = db.Column(
-        db.Integer,
-        primary_key=True
-    )
-
-    user_id = db.Column(
-        db.Integer,
-        db.ForeignKey('users.id', ondelete='cascade')
-    )
-
-    recipe_id = db.Column(
-        db.Integer
-    )
     

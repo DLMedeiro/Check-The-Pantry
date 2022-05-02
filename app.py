@@ -1,5 +1,5 @@
 from crypt import methods
-# from socket import recv_fds
+
 from wsgiref.util import application_uri
 import requests
 import os
@@ -9,8 +9,8 @@ from flask import Flask, render_template, request, flash, redirect, session, g, 
 from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy.exc import IntegrityError
 
-from forms import UserAddForm, LoginForm, RecipeSearch
-from models import db, connect_db, User, Favorites
+from forms import UserAddForm, LoginForm, RecipeSearch, CommentForm
+from models import db, connect_db, User, Favorites, Comment_Recipe, Comment_User
 
 CURR_USER_KEY = "curr_user"
 
@@ -197,6 +197,7 @@ def favorites(recipe_id):
 
 # Comments
 
+
 # @app.route('/<int:rec_id>/add_comments', methods = ['GET','POST'])
 # def add_comment(rec_id):
 #     """if / else for logged in users"""
@@ -225,6 +226,7 @@ def favorites(recipe_id):
         # return redirect(f'/details/{rec_id}')
 
     # return render_template('comment_add.html')
+
 
 @app.route('/edit_comments')
 def edit_comment():

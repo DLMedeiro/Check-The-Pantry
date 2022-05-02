@@ -19,6 +19,7 @@ User.query.delete()
 
 #Create User
 
+
 hashed_pwd = bcrypt.generate_password_hash('TacoTaco').decode('UTF-8')
 
 user = User(

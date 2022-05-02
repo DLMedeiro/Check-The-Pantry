@@ -1,5 +1,5 @@
 from crypt import methods
-from socket import recv_fds
+
 from wsgiref.util import application_uri
 import requests
 import os
@@ -123,14 +123,6 @@ def homepage():
 
 
 
-    
-# @app.route('/details')
-# def details():
-
-
-#     return render_template('details.html')
-
-
 @app.route('/details/<rec_id>')
 def rec_details(rec_id):
     """Non user access vs user access"""
@@ -205,24 +197,25 @@ def favorites(recipe_id):
 
 # Comments
 
-@app.route('/<int:rec_id>/add_comments', methods = ['GET','POST'])
-def add_comment(rec_id):
-    """if / else for logged in users"""
-    """connect to user recipe id"""
-    """create comment"""
-    """redirect to recipe detail page"""
 
-    if not g.user:
-        flash("Access unauthorized.", "danger")
-        return redirect("/")
+# @app.route('/<int:rec_id>/add_comments', methods = ['GET','POST'])
+# def add_comment(rec_id):
+#     """if / else for logged in users"""
+#     """connect to user recipe id"""
+#     """create comment"""
+#     """redirect to recipe detail page"""
 
-    form = CommentForm()
+#     if not g.user:
+#         flash("Access unauthorized.", "danger")
+#         return redirect("/")
 
-    if form.validate_on_submit():
-        rec_comment = Comment_Recipe(comment_text=form.text.data, recipe_id = rec_id)
-        user_comment = Comment_User(user_id = g.user.id, comment_id = rec_comment.id)
-        db.session.add(rec_comment, user_comment)
-        db.session.commit()
+    # form = CommentForm()
+
+    # if form.validate_on_submit():
+    #     rec_comment = Comment_Recipe(comment_text=form.text.data, recipe_id = rec_id)
+    #     user_comment = Comment_User(user_id = g.user.id, comment_id = rec_comment.id)
+    #     db.session.add(rec_comment, user_comment)
+    #     db.session.commit()
 
     # if form.validate_on_submit():
     #     comment = Comment_User(comment_text=form.text.data, user_id = g.user)
@@ -230,9 +223,10 @@ def add_comment(rec_id):
     #     db.session.commit()
 
         # return redirect(f'/details/{recipe_id}')
-        return redirect(f'/details/{rec_id}')
+        # return redirect(f'/details/{rec_id}')
 
-    return render_template('comment_add.html', form = form)
+    # return render_template('comment_add.html')
+
 
 @app.route('/edit_comments')
 def edit_comment():

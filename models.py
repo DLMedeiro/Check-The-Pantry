@@ -105,44 +105,46 @@ class Favorites(db.Model):
         db.Integer
     )
 
-class Comment_User(db.Model):
-    """Mapping users to comments"""
 
-    __tablename__ = 'comments_users' 
+# class Comment_User(db.Model):
+#     """Mapping users to comments"""
 
-    id = db.Column(
-        db.Integer,
-        primary_key=True
-    )
+#     __tablename__ = 'comments_users' 
 
-    user_id = db.Column(
-        db.Integer,
-        db.ForeignKey('users.id', ondelete='cascade')
-    )
+#     id = db.Column(
+#         db.Integer,
+#         primary_key=True
+#     )
 
-    comment_id = db.Column(
-        db.Integer,
-        db.ForeignKey('comments_recipes.id', ondelete='cascade')
-    )
+#     user_id = db.Column(
+#         db.Integer,
+#         db.ForeignKey('users.id', ondelete='cascade')
+#     )
+
+#     comment_id = db.Column(
+#         db.Integer,
+#         db.ForeignKey('comments_recipes.id', ondelete='cascade')
+#     )
 
 
 
-class Comment_Recipe(db.Model):
-    """Mapping comments to recipes"""
+# class Comment_Recipe(db.Model):
+#     """Mapping comments to recipes"""
 
-    __tablename__ = 'comments_recipes' 
+#     __tablename__ = 'comments_recipes' 
 
-    id = db.Column(
-        db.Integer,
-        primary_key=True
-    )
+#     id = db.Column(
+#         db.Integer,
+#         primary_key=True
+#     )
 
-    comment_text = db.Column(
-        db.Text,
-        nullable=False,
-        unique=False
-    )
+#     comment_text = db.Column(
+#         db.Text,
+#         nullable=False,
+#         unique=False
+#     )
 
-    recipe_id = db.Column(
-        db.Integer
-    )
+#     recipe_id = db.Column(
+#         db.Integer
+#     )
+

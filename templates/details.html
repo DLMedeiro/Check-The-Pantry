@@ -59,6 +59,18 @@
     <a href="/{{res3['id']}}/add_comments">Add comment</a>
 </div>
 
+<div>
+    <ul>
+        {%for r in rec_comment_list%}
+            <li>{{r.user.username}}: {{r.comment_text}}
+                    {%if r.user_id == g.user.id%}
+                      <a href="/{{r.id}}/edit_comments">Edit Comment</a>
+                    {%endif%}
+            </li>
+        {%endfor%}
+    </ul>
+</div>
+
 
 
 {%endfor%}

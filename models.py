@@ -2,6 +2,8 @@
 
 # from datetime import datetime
 
+# update table names to reflect what they are
+
 from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
 
@@ -45,7 +47,7 @@ class User(db.Model):
     )
 
     favorites = db.relationship('Favorites')
-    u_comments = db.relationship('Comment_User')
+    user_comments = db.relationship('Comment_Recipe')
 
     @classmethod
     def signup(cls, email, username, password):
@@ -106,45 +108,37 @@ class Favorites(db.Model):
     )
 
 
-# class Comment_User(db.Model):
-#     """Mapping users to comments"""
+class Comment_Recipe(db.Model):
+    """Mapping comments to recipes"""
 
-#     __tablename__ = 'comments_users' 
+    __tablename__ = 'comments_recipes' 
 
-#     id = db.Column(
-#         db.Integer,
-#         primary_key=True
-#     )
+    id = db.Column(
+        db.Integer,
+        primary_key=True
+    )
 
-#     user_id = db.Column(
-#         db.Integer,
-#         db.ForeignKey('users.id', ondelete='cascade')
-#     )
+    comment_text = db.Column(
+        db.Text,
+        nullable=False,
+        unique=False
+    )
 
-#     comment_id = db.Column(
-#         db.Integer,
-#         db.ForeignKey('comments_recipes.id', ondelete='cascade')
-#     )
+    recipe_id = db.Column(
+        db.Integer
+    )
 
+    user_id = db.Column(
+        db.Integer,
+        db.ForeignKey('users.id', ondelete='cascade')
+    )
 
+    user = db.relationship('User')
+    
+    # Add in user Id and update rest of logic -> messages are currently showing active user as author
 
-# class Comment_Recipe(db.Model):
-#     """Mapping comments to recipes"""
-
-#     __tablename__ = 'comments_recipes' 
-
-#     id = db.Column(
-#         db.Integer,
-#         primary_key=True
-#     )
-
-#     comment_text = db.Column(
-#         db.Text,
-#         nullable=False,
-#         unique=False
-#     )
-
-#     recipe_id = db.Column(
-#         db.Integer
-#     )
-
+    def edit_comment(self, comment_text, recipe_id, user_id):
+            """Edit comment information in database"""
+            self.comment_text = comment_text
+            self.recipe_id= recipe_id
+            self.user_id= user_id

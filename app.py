@@ -10,7 +10,7 @@ from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy.exc import IntegrityError
 
 from forms import UserAddForm, LoginForm, RecipeSearch, CommentForm
-from models import db, connect_db, User, Favorites, Comment_Recipe, Comment_User
+from models import db, connect_db, User, Favorites, Comment_Recipe
 
 CURR_USER_KEY = "curr_user"
 
@@ -142,8 +142,12 @@ def rec_details(rec_id):
 
     favorites = (Favorites.query.all())
     user_favs = [favorites.recipe_id for favorites in g.user.favorites]
+    
+    rec_comment_list = Comment_Recipe.query.filter(Comment_Recipe.recipe_id == rec_id).all() 
 
-    return render_template('details.html', res2=res2, res3 = res3,favorites = favorites, user_favs = user_favs )
+    user_comment_list = Comment_Recipe.query.filter(Comment_Recipe.user_id == g.user.id).all()
+
+    return render_template('details.html', res2=res2, res3 = res3,favorites = favorites, user_favs = user_favs, rec_comment_list = rec_comment_list, user_comment_list = user_comment_list)
 
 # Favorites
 @app.route('/users/<int:user_id>/favorites', methods=["GET"])
@@ -190,61 +194,86 @@ def favorites(recipe_id):
         g.user.favorites.append(new_f)
 
     db.session.commit()
-
+    
     return redirect(f'/details/{recipe_id}')
-
-
 
 # Comments
 
+@app.route('/<int:rec_id>/add_comments', methods = ['GET','POST'])
+def add_comment(rec_id):
+    """if / else for logged in users"""
+    """connect to user recipe id"""
+    """create comment"""
+    """redirect to recipe detail page"""
 
-# @app.route('/<int:rec_id>/add_comments', methods = ['GET','POST'])
-# def add_comment(rec_id):
-#     """if / else for logged in users"""
-#     """connect to user recipe id"""
-#     """create comment"""
-#     """redirect to recipe detail page"""
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
 
-#     if not g.user:
-#         flash("Access unauthorized.", "danger")
-#         return redirect("/")
+    form = CommentForm()
 
-    # form = CommentForm()
+    if form.validate_on_submit():
 
-    # if form.validate_on_submit():
-    #     rec_comment = Comment_Recipe(comment_text=form.text.data, recipe_id = rec_id)
-    #     user_comment = Comment_User(user_id = g.user.id, comment_id = rec_comment.id)
-    #     db.session.add(rec_comment, user_comment)
-    #     db.session.commit()
+        rec_comment = Comment_Recipe(comment_text=form.text.data, recipe_id = rec_id, user_id = g.user.id)
+        db.session.add(rec_comment)
+        db.session.commit()
 
-    # if form.validate_on_submit():
-    #     comment = Comment_User(comment_text=form.text.data, user_id = g.user)
-    #     g.user.u_comments.append(comment)
-    #     db.session.commit()
-
-        # return redirect(f'/details/{recipe_id}')
-        # return redirect(f'/details/{rec_id}')
-
-    # return render_template('comment_add.html')
+        return redirect(f'/details/{rec_id}')
+    
+    return render_template('comment_add.html', form = form)
 
 
-@app.route('/edit_comments')
-def edit_comment():
+@app.route('/<int:comment_id>/edit_comments', methods = ['GET'])
+def edit_comment_form(comment_id):
     """if / else for logged in users"""
     """connect to user recipe id and comment id"""
     """edit comment"""
     """redirect to recipe detail page"""
 
-    return render_template('comment_edit.html')
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
+
+    comment_data = Comment_Recipe.query.get_or_404(comment_id)
+
+    return render_template('comment_edit.html', comment_data = comment_data)
+
+@app.route('/<int:comment_id>/edit_comments', methods = ['POST'])
+def edit_comment(comment_id):
+    """if / else for logged in users"""
+    """connect to user recipe id and comment id"""
+    """edit comment"""
+    """redirect to recipe detail page"""
+
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
+
+    comment_text = request.form['comment_text']
+    comment_data = Comment_Recipe.query.get(comment_id)
+
+
+    comment_data.edit_comment(comment_text, comment_data.recipe_id, comment_data.user_id)
+    db.session.add(comment_data)
+    db.session.commit()
+
+    return redirect(f'/details/{comment_data.recipe_id}')
     
-@app.route('/delete_comments')
-def delete_comment():
+@app.route('/<int:comment_id>/delete_comments', methods = ['POST'])
+def delete_comment(comment_id):
     """if / else for logged in users"""
     """connect to user recipe id and comment id"""
     """delete comment"""
     """redirect to recipe detail page"""
 
-    return redirect ('details.html')
+
+    comment_data = Comment_Recipe.query.get(comment_id)
+
+    recipe_id = int(comment_data.recipe_id)
+
+    db.session.delete(comment_data)
+
+    return redirect (f'details.html/{recipe_id}')
 
 # Profile
 

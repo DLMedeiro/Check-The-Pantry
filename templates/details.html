@@ -64,7 +64,7 @@
         {%for r in rec_comment_list%}
             <li>{{r.user.username}}: {{r.comment_text}}
                     {%if r.user_id == g.user.id%}
-                      <a href="/{{r.id}}/edit_comments">Edit Comment</a>
+                      <a href="/{{r.recipe_id}}/{{r.id}}/edit_comments">Edit Comment</a>
                     {%endif%}
             </li>
         {%endfor%}

@@ -17,7 +17,9 @@
     </div>
 
     <div>
-        <a href="/{{comment_data.id}}/delete_comments">Delete Comment</a>
+        <form method="POST" action="/{{recipe_id}}/{{comment_data.id}}/delete_comments">
+            <button class="btn btn-outline-danger">Delete Comment</button>
+        </form>
     </div>
     
 </div>

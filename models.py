@@ -46,7 +46,8 @@ class User(db.Model):
         nullable=False,
     )
 
-    favorites = db.relationship('Favorites', back_populates='user')
+    favorites = db.relationship('Favorites', backref='favorites', cascade='all, delete')
+
     user_comments = db.relationship('Comment_Recipe')
 
     def edit_user(self, email, username):
@@ -102,17 +103,16 @@ class Favorites(db.Model):
         primary_key=True
     )
 
-    user_id = db.Column(
-        db.Integer,
-        db.ForeignKey('users.id', ondelete='cascade'), nullable=False,
-    )
-
     recipe_id = db.Column(
         db.Integer,
         nullable=False,
     )
+    user_id = db.Column(
+        db.Integer,
+        db.ForeignKey('users.id'), nullable=False,
+    )
 
-    user = db.relationship('User', back_populates='favorites',single_parent = True, cascade = 'all, delete-orphan')
+    user = db.relationship('User')
 
 
 class Comment_Recipe(db.Model):

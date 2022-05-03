@@ -31,15 +31,15 @@ connect_db(app)
 
 # User Sign up / Login / Logout
 
-@app.before_request
-def add_user_to_g():
-    """If we're logged in, add curr user to Flask global."""
+# @app.before_request
+# def add_user_to_g():
+#     """If we're logged in, add curr user to Flask global."""
 
-    if CURR_USER_KEY in session:
-        g.user = User.query.get(session[CURR_USER_KEY])
+#     if CURR_USER_KEY in session:
+#         g.user = User.query.get(session[CURR_USER_KEY])
 
-    else:
-        g.user = None
+#     else:
+#         g.user = None
 
 def do_login(user):
     """Log in user."""
@@ -117,6 +117,13 @@ def logout():
 @app.route('/')
 def homepage():
     """Show list of top recipes - navigate to details page for each"""
+
+    if CURR_USER_KEY in session:
+        g.user = User.query.get(session[CURR_USER_KEY])
+
+    else:
+        g.user = None
+
     form = RecipeSearch()
 
     return render_template('homepage.html', form = form)
@@ -141,14 +148,21 @@ def rec_details(rec_id):
     res2 = response2.json()
     res3 = response3.json()
 
-    favorites = (Favorites.query.all())
-    user_favs = [favorites.recipe_id for favorites in g.user.favorites]
-    
-    rec_comment_list = Comment_Recipe.query.filter(Comment_Recipe.recipe_id == rec_id).all() 
+    if CURR_USER_KEY in session:
+        g.user = User.query.get(session[CURR_USER_KEY])
 
-    user_comment_list = Comment_Recipe.query.filter(Comment_Recipe.user_id == g.user.id).all()
+        favorites = (Favorites.query.all())
+        user_favs = [favorites.recipe_id for favorites in g.user.favorites]
+        
+        rec_comment_list = Comment_Recipe.query.filter(Comment_Recipe.recipe_id == rec_id).all() 
 
-    return render_template('details.html', res2=res2, res3 = res3,favorites = favorites, user_favs = user_favs, rec_comment_list = rec_comment_list, user_comment_list = user_comment_list)
+        user_comment_list = Comment_Recipe.query.filter(Comment_Recipe.user_id == g.user.id).all()
+
+        return render_template('details.html', res2=res2, res3 = res3,favorites = favorites, user_favs = user_favs, rec_comment_list = rec_comment_list, user_comment_list = user_comment_list)
+    else:
+        g.user = None
+
+    return render_template('details.html', res2=res2, res3 = res3)
 
 # Add recipe to user Favorites
 @app.route('/details/<int:recipe_id>', methods=['POST'])

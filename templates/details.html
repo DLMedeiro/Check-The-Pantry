@@ -37,40 +37,45 @@
 </ul>
 </div>
 
-<div>
-
-    <!-- Favorites -->
-    
-    
-    <form method="POST" action="" class="fav_recipies">
-        <button class="
-        btn 
-        btn-sm
-        {{'btn-primary' if res3['id'] in user_favs else 'btn-secondary'}}"
-    </button>
-    <i class="fa fa-thumbs-up"></i> 
-</form>
-</div>
+{%if g.user%}
+<!-- Favorites -->
+    <div>
+        <form method="POST" action="" class="fav_recipies">
+            <button class="
+                btn 
+                btn-sm
+                {{'btn-primary' if res3['id'] in user_favs else 'btn-secondary'}}"
+            </button>
+            <i class="fa fa-thumbs-up"></i> 
+        </form>
+    </div>
 
 
-<div>
 <!-- Comments -->
-    <h4>User Comments</h4>
-    <a href="/{{res3['id']}}/add_comments">Add comment</a>
-</div>
+    <div>
+        <h4>User Comments</h4>
+        <a href="/{{res3['id']}}/add_comments">Add comment</a>
+    </div>
 
-<div>
-    <ul>
-        {%for r in rec_comment_list%}
-            <li>{{r.user.username}}: {{r.comment_text}}
-                    {%if r.user_id == g.user.id%}
-                      <a href="/{{r.recipe_id}}/{{r.id}}/edit_comments">Edit Comment</a>
-                    {%endif%}
-            </li>
-        {%endfor%}
-    </ul>
-</div>
+    <div>
+        <ul>
+            {%for r in rec_comment_list%}
+                <li>{{r.user.username}}: {{r.comment_text}}
+                        {%if r.user_id == g.user.id%}
+                        <a href="/{{r.recipe_id}}/{{r.id}}/edit_comments">Edit Comment</a>
+                        {%endif%}
+                </li>
+            {%endfor%}
+        </ul>
+    </div>
 
+{%else%}
+    <div>
+        <h6>
+            <a href="/login">Log in to view comments and save recipes</a>
+        </h6>
+    </div>
+{%endif%}
 
 
 {%endfor%}

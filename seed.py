@@ -20,17 +20,24 @@ User.query.delete()
 #Create User
 
 
-hashed_pwd = bcrypt.generate_password_hash('TacoTaco').decode('UTF-8')
+hashed_pwd1 = bcrypt.generate_password_hash('TacoTaco').decode('UTF-8')
+hashed_pwd2 = bcrypt.generate_password_hash('FinnFinn').decode('UTF-8')
 
-user = User(
+user1 = User(
         email='taco@gamil.com',
-        username='taco',
-        password=hashed_pwd
+        username='Taco',
+        password=hashed_pwd1
+    )
+user2 = User(
+        email='finn@gamil.com',
+        username='Finn',
+        password=hashed_pwd2
     )
 
 
 # Add new user object to the session
-db.session.add(user)
+db.session.add(user1)
+db.session.add(user2)
 
 
 # Commit 

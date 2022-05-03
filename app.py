@@ -9,7 +9,7 @@ from flask import Flask, render_template, request, flash, redirect, session, g, 
 from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy.exc import IntegrityError
 
-from forms import UserAddForm, LoginForm, RecipeSearch, CommentForm
+from forms import UserAddForm, LoginForm, RecipeSearch, CommentForm, UserEditForm
 from models import db, connect_db, User, Favorites, Comment_Recipe
 
 CURR_USER_KEY = "curr_user"
@@ -278,25 +278,47 @@ def show_favorites(user_id):
 
 # Profile
 
-@app.route('/profile')
+@app.route('/profile', methods = ['GET','POST'])
 def profile():
     """if / else for logged in users"""
     """connect to user id"""
 
-    return render_template('profile.html')
+    user = g.user
+    form = UserEditForm(onj=user)
 
-@app.route('/edit_profile')
-def edit_profile():
-    """if / else for logged in users"""
-    """connect to user id"""
-    """redirect to recipe profile page"""
+    if form.validate_on_submit():
+        if User.authenticate(user.username,form.password.data):
+            try:
+                user.email = form.email.data
+                user.username = form.username.data
 
-    return render_template('profile.html')
+                user = user.edit_user(email=user.email, username=user.username)
 
-@app.route('/delete_profile')
+                db.session.commit()
+
+            except IntegrityError:
+                flash("Username already taken", 'danger')
+                return redirect('/profile')
+            flash("Account updated", "success")
+            return redirect('/profile')
+
+
+
+    return render_template('profile.html', form = form, user = user)
+
+
+@app.route('/delete_profile', methods = ['POST'])
 def delete_profile():
     """if / else for logged in users"""
     """connect to user id"""
     """redirect to homepage"""
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
+
+    do_logout
+
+    db.session.delete(g.user)
+    db.session.commit()
 
     return redirect ('/')

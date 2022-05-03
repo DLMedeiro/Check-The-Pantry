@@ -1,6 +1,7 @@
 const apiKey = '5d8f7026a537498bbe01acca5806b301'
 const searchForm = document.getElementById('search_form')
 
+
 // Homepage search results
 function searchHtml(r){
     return `
@@ -14,7 +15,7 @@ function searchHtml(r){
 searchForm.addEventListener("submit", function(e){
     e.preventDefault();
     const search_q = document.getElementById('Ingredient')
-    console.log(search_q.value)
+
     getResults(search_q.value)
 });
 
@@ -29,4 +30,8 @@ async function getResults(q) {
     }
     console.log(response.data)
 }
+
+// Profile Default Values
+
+
 

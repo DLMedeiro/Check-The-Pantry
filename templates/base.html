@@ -41,8 +41,9 @@
       <li><a href="/login">Log in</a></li>
       {% else %}
       <li>
-        <a href="/users/{{ g.user.id }}">{{ g.user.username }}'s Profile</a>
+        <a href="/profile">{{ g.user.username }}'s Profile</a>
       </li>
+      <!-- remove user id from url -->
       <li><a href="/users/{{ g.user.id }}/favorites">Favorites</a></li>
       <li><a href="/logout">Log out</a></li>
       {% endif %}

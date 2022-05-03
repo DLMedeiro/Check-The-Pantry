@@ -49,6 +49,10 @@ class User(db.Model):
     favorites = db.relationship('Favorites')
     user_comments = db.relationship('Comment_Recipe')
 
+    def edit_user(self, email, username):
+        self.email = email
+        self.username = username
+
     @classmethod
     def signup(cls, email, username, password):
         """Sign up user.
@@ -134,7 +138,7 @@ class Comment_Recipe(db.Model):
     )
 
     user = db.relationship('User')
-    
+
     # Add in user Id and update rest of logic -> messages are currently showing active user as author
 
     def edit_comment(self, comment_text, recipe_id, user_id):

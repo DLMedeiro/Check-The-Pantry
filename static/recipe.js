@@ -27,12 +27,9 @@ async function getResults(q) {
     for (let r of response.data) {
         let lineItem = $(searchHtml(r));
         $("#search-results").append(lineItem)
-        console.log(r['[title]'])
     }
-    console.log(response.data)
 }
 
-// Profile Default Values
 
 
 

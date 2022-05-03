@@ -26,8 +26,6 @@ app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', "it's a secret")
 toolbar = DebugToolbarExtension(app)
 
-
-
 connect_db(app)
 
 # User Sign up / Login / Logout
@@ -47,8 +45,6 @@ def do_login(user):
 
     session[CURR_USER_KEY] = user.id
 
-
-
 def do_logout():
     """Logout user."""
 
@@ -57,7 +53,7 @@ def do_logout():
 
 @app.route('/register', methods=["GET", "POST"])
 def register():
-    """User registration form - redirect to homepage"""
+    """User registration form"""
 
     """Create new user and add to DB. Redirect to home page."""
 
@@ -111,7 +107,7 @@ def login():
 @app.route('/logout')
 def logout():
     """Handle logout of user."""
-    # IMPLEMENT THIS
+
     session.pop(CURR_USER_KEY)
     flash("Logout Successful")
     return redirect('/')
@@ -120,6 +116,7 @@ def logout():
 def homepage():
     """Show list of top recipes - navigate to details page for each"""
 
+    # Navbar specific for logged in vs not logged in
     if CURR_USER_KEY in session:
         g.user = User.query.get(session[CURR_USER_KEY])
 
@@ -135,13 +132,8 @@ def homepage():
 
 @app.route('/details/<rec_id>')
 def rec_details(rec_id):
-    """Non user access vs user access"""
-
-    """Show if recipe is on favories list - if logged in"""
-    """connect to user recipe id"""
+    """Specific access for logged in and non logged users"""
     """list recipes ingredients and instructions"""
-    """add / remove from favories list"""
-    """view / add / edit comments"""
 
     response2 = requests.get(f"https://api.spoonacular.com/recipes/{rec_id}/analyzedInstructions", params={'apiKey': apiKey})
     
@@ -150,6 +142,10 @@ def rec_details(rec_id):
     res2 = response2.json()
     res3 = response3.json()
 
+    # Logged in users can view and use comment and favorite features
+    """Show if recipe is on favories list - if logged in"""
+    """add / remove from favories list"""
+    """view / add / edit comments"""
     if CURR_USER_KEY in session:
         g.user = User.query.get(session[CURR_USER_KEY])
 
@@ -166,11 +162,10 @@ def rec_details(rec_id):
 
     return render_template('details.html', res2=res2, res3 = res3)
 
-# Add recipe to user Favorites
+# Favorites
 @app.route('/details/<int:recipe_id>', methods=['POST'])
-def favorites(recipe_id):
+def toggle_favorites(recipe_id):
     """no access if not logged in"""
-    """connect to user id"""
     """list recipes connected to user"""
     """remove from favories list"""
     """Toggle a liked message for the currently-logged-in user."""
@@ -195,12 +190,29 @@ def favorites(recipe_id):
     
     return redirect(f'/details/{recipe_id}')
 
-# Comments
+@app.route('/users/<int:user_id>/favorites', methods=["GET"])
+def show_favorites(user_id):
+    """Show list of user favorites"""
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
 
+    user = User.query.get_or_404(user_id)
+
+    favs_rec_id_list = [favorites.recipe_id for favorites in g.user.favorites]
+
+    fav_resp = []
+
+    for id in favs_rec_id_list:
+        response3 = requests.get(f"https://api.spoonacular.com/recipes/{id}/information", params={'apiKey': apiKey, 'includeNutrition':'false'})
+        res3 = response3.json()
+        fav_resp.append(res3)
+
+    return render_template('favorites.html', user=user,fav_resp = fav_resp, favs_rec_id_list=favs_rec_id_list)
+
+# Comments
 @app.route('/<int:rec_id>/add_comments', methods = ['GET','POST'])
 def add_comment(rec_id):
-    """if / else for logged in users"""
-    """connect to user recipe id"""
     """create comment"""
     """redirect to recipe detail page"""
 
@@ -220,13 +232,9 @@ def add_comment(rec_id):
     
     return render_template('comment_add.html', form = form)
 
-
 @app.route('/<int:recipe_id>/<int:comment_id>/edit_comments', methods = ['GET'])
 def edit_comment_form(recipe_id, comment_id):
-    """if / else for logged in users"""
-    """connect to user recipe id and comment id"""
-    """edit comment"""
-    """redirect to recipe detail page"""
+    """generate edit comment form"""
 
     if not g.user:
         flash("Access unauthorized.", "danger")
@@ -238,8 +246,6 @@ def edit_comment_form(recipe_id, comment_id):
 
 @app.route('/<int:recipe_id>/<int:comment_id>/edit_comments', methods = ['POST'])
 def edit_comment(recipe_id, comment_id):
-    """if / else for logged in users"""
-    """connect to user recipe id and comment id"""
     """edit comment"""
     """redirect to recipe detail page"""
 
@@ -250,7 +256,6 @@ def edit_comment(recipe_id, comment_id):
     comment_text = request.form['comment_text']
     comment_data = Comment_Recipe.query.get(comment_id)
 
-
     comment_data.edit_comment(comment_text, comment_data.recipe_id, comment_data.user_id)
     db.session.add(comment_data)
     db.session.commit()
@@ -259,11 +264,8 @@ def edit_comment(recipe_id, comment_id):
     
 @app.route('/<int:recipe_id>/<int:comment_id>/delete_comments', methods = ['POST'])
 def delete_comment(recipe_id, comment_id):
-    """if / else for logged in users"""
-    """connect to user recipe id and comment id"""
     """delete comment"""
     """redirect to recipe detail page"""
-
 
     comment_data = Comment_Recipe.query.get(comment_id)
 
@@ -272,32 +274,10 @@ def delete_comment(recipe_id, comment_id):
     
     return redirect (f'/details/{recipe_id}')
 
-# Favorites
-@app.route('/users/<int:user_id>/favorites', methods=["GET"])
-def show_favorites(user_id):
-    if not g.user:
-        flash("Access unauthorized.", "danger")
-        return redirect("/")
-
-    user = User.query.get_or_404(user_id)
-
-    favs_rec_id_list = [favorites.recipe_id for favorites in g.user.favorites]
-
-    fav_resp = []
-
-    for id in favs_rec_id_list:
-        response3 = requests.get(f"https://api.spoonacular.com/recipes/{id}/information", params={'apiKey': apiKey, 'includeNutrition':'false'})
-        res3 = response3.json()
-        fav_resp.append(res3)
-
-    return render_template('favorites.html', user=user,fav_resp = fav_resp, favs_rec_id_list=favs_rec_id_list)
-
 # Profile
-
 @app.route('/profile', methods = ['GET','POST'])
 def profile():
-    """if / else for logged in users"""
-    """connect to user id"""
+    """Edit user profile information (not password)"""
 
     user = g.user
     form = UserEditForm(onj=user)
@@ -318,15 +298,11 @@ def profile():
             flash("Account updated", "success")
             return redirect('/profile')
 
-
-
     return render_template('profile.html', form = form, user = user)
-
 
 @app.route('/delete_profile', methods = ['POST'])
 def delete_profile():
-    """if / else for logged in users"""
-    """connect to user id"""
+    """Remove user profile and all associated favorites and comments"""
     """redirect to homepage"""
     if not g.user:
         flash("Access unauthorized.", "danger")

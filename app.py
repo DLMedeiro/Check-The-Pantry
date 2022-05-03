@@ -11,6 +11,7 @@ from sqlalchemy.exc import IntegrityError
 
 from forms import UserAddForm, LoginForm, RecipeSearch, CommentForm, UserEditForm
 from models import db, connect_db, User, Favorites, Comment_Recipe
+from secrets import apiKey
 
 CURR_USER_KEY = "curr_user"
 
@@ -25,7 +26,7 @@ app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', "it's a secret")
 toolbar = DebugToolbarExtension(app)
 
-apiKey = 'e3e74bc5b1e646ae8888b3f7dca142f6'
+
 
 connect_db(app)
 

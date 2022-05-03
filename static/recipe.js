@@ -1,4 +1,5 @@
-const apiKey = 'e3e74bc5b1e646ae8888b3f7dca142f6'
+import apiKey from secrets
+
 const searchForm = document.getElementById('search_form')
 
 

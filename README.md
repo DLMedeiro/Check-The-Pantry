@@ -1,6 +1,6 @@
 Things to do:
 Authentication on pages
-API key private
+
 
 Project Proposal:
 

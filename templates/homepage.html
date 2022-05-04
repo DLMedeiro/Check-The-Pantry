@@ -1,57 +1,38 @@
 {% extends 'base.html' %}
 {% block content %}
-<!-- Welcome user -->
-<!-- List of API recipes -->
 
-<h1>Welcome to the homepage</h1>
-
-
-<div class="row justify-content-md-center">
-    <div class="col-md-7 col-lg-5">
-      <h2 class="join-message">What's for dinner????</h2>
-
-      <form id="search_form">
-        {{ form.hidden_tag() }}
-
-            {% for field in form if field.widget.input_type != 'hidden' %}
-                {% for error in field.errors %}
-                    <span class="text-danger">{{ error }}</span>
-                {% endfor %}
-                {{ field(placeholder=field.label.text, class="form-control") }}
-            {% endfor %}
-
-            <button class="btn btn-primary btn-block btn-lg">Search</button>
-        </form>
+<section id = 'showcase'>
+    <div class="container">
+        <div class="showcase-container">
+            <div class="showcase-content">
+                <h1 class="join-message">Enter an ingredient to start your search</h1>
+          
+                <form id="search_form">
+                  {{ form.hidden_tag() }}
+          
+                      {% for field in form if field.widget.input_type != 'hidden' %}
+                          {% for error in field.errors %}
+                              <span class="text-danger">{{ error }}</span>
+                          {% endfor %}
+                          {{ form.Ingredient(value='', class="form-control") }}
+                      {% endfor %}
+          
+                      <button class="btn-search">Search</button>
+                  </form>
+            </div>
+        </div>
     </div>
-</div>
+</section>
 
-<div class="row justify-content-md-center">
-    <div class="col-md-7 col-lg-5">
-        <h2 class="join-message">Search Results</h2>
-            <div>
-                <div id = "search-results"></div>
-                <div>
-                    <!-- 
-                        If recipe.id is in user.favorites:
-                            form/button = "Remove from Favorites"
-                        Else: 
-                            form/button = "Add to Favotires"
-                    -->
-<!-- 
-                    <form method="POST" action="/users/add_favrite/ recipe.id " id="messages-form">
-                        <button class="
-                          btn 
-                          btn-sm 
-                          'btn-primary' if msg.id in likes else 'btn-secondary'"
-                        >
-                          <i class="fa fa-thumbs-up"></i> 
-                        </button>
-                    </form> -->
-
-                </div>
+<article id="main">
+    <div class="container">
+        <!-- <h2>Search Results</h2> -->
+            <div id="search-results">
+                <!-- Div with link from Javascript file for results -->
             </div>
     </div>
-</div>
+</article>
+
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="/static/recipe.js"></script>
 

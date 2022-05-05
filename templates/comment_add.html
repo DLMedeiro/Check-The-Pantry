@@ -2,9 +2,10 @@
 {% block content %}
 <!-- Form to add comment and submit or cancel -->
 
-<div class="row justify-content-center">
-    <div class="col-md-6">
-      <form method="POST">
+<div>
+    <div class="container-small">
+      <h2>What are your comments on this recipe?</h2>
+      <form method="POST" id="add-comment-form">
         {{ form.csrf_token }}
         <div>
           {% if form.text.errors %}
@@ -14,9 +15,9 @@
           </span>
             {% endfor %}
           {% endif %}
-          {{ form.text(placeholder="What's happening?", class="form-control", rows="3") }}
+          {{ form.text(class="form-control form-group") }}
         </div>
-        <button class="btn btn-outline-success btn-block">Add my comment!</button>
+        <button class="btn-comment-add">Add my comment!</button>
       </form>
     </div>
   </div>

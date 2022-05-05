@@ -37,7 +37,7 @@
     <div>
         <form method="POST" action="" class="fav_recipies">
             <button class="
-                {{'btn-primary' if res3['id'] in user_favs else 'btn-secondary'}}">
+                {{'btn-secondary' if res3['id'] in user_favs else 'btn-primary'}}">
                 <i class="fa fa-thumbs-up"></i> 
             </button>
         </form>
@@ -54,14 +54,16 @@
             <div class="showcase-container comments">
                 {%for r in rec_comment_list%}
                     <div class="showcase-content comments">
-                        <p> <b>{{r.user.username}}</b>: {{r.comment_text}} </p>
+                        <p> <b>{{r.user.username}}</b>: 
+                            {{r.comment_text}}
                             {%if r.user_id == g.user.id%}
-                            <a class='btn-comment-edit' href="/{{r.recipe_id}}/{{r.id}}/edit_comments">Edit Comment</a>
+                            <a class='btn-comment-edit' href="/{{r.recipe_id}}/{{r.id}}/edit_comments">(Edit Comment)</a>
                             {%endif%}
+                        </p>
                     </div>
-                {%endfor%}
+                    {%endfor%}
+                </div>
             </div>
-        </div>
 
         {%else%}
             <div>
@@ -75,3 +77,4 @@
 
 {%endfor%}
 {% endblock %}
+

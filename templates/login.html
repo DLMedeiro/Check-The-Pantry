@@ -1,9 +1,8 @@
 {% extends 'base.html' %}
 {% block content %}
-<h1>Form to log in</h1>
-<div class="row justify-content-md-center">
-    <div class="col-md-7 col-lg-5">
-      <h2 class="join-message">Welcome back.</h2>
+<div class="py-3">
+    <div class="container-small">
+      <h2 class="l-heading">Enter your Username and Password below</h2>
 
       <form method="POST" id="user_form">
         {{ form.hidden_tag() }}
@@ -12,15 +11,16 @@
           {% for error in field.errors %}
             <span class="text-danger">{{ error }}</span>
           {% endfor %}
-          {{ field(placeholder=field.label.text, class="form-control") }}
+          {{ field(placeholder=field.label.text, class="form-control form-group") }}
         {% endfor %}
 
-        <button class="btn btn-primary btn-block btn-lg">Log in</button>
+        <button class="btn-login">Log in</button>
       </form>
+    </div>
+    <div class="container-small">
+        <a class='btn-register' href="/register">Click here to register</a>
     </div>
   </div>
 
-<h4>No Account?</h4>
-<a href="/register">Sign up here</a>
 
 {% endblock %}

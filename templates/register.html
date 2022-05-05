@@ -1,11 +1,10 @@
 {% extends 'base.html' %}
 {% block content %}
-<H1>Registration Form</H1>
 
-<div class="row justify-content-md-center">
-  <div class="row justify-content-md-center">
-    <div class="col-md-7 col-lg-5">
-      <h2 class="join-message">Join Today.</h2>
+
+<div class="py-3">
+  <div class="container-small">
+      <h2 class="join-message">Join Today!</h2>
       <form method="POST" id="user_form">
         {{ form.hidden_tag() }}
   
@@ -16,8 +15,8 @@
           {{ field(placeholder=field.label.text, class="form-control") }}
         {% endfor %}
   
-        <button class="btn btn-primary btn-lg btn-block">Sign me up!</button>
+        <button class="btn-signup">Sign me up!</button>
       </form>
-    </div>
   </div>
+</div>
 {% endblock %}

@@ -5,23 +5,25 @@
 
 <h1>{{user.username}}'s Favorite Recipes</h1>
 
-<h2>Recipe List</h2>
-    {%for rec in fav_resp%}
-        <ul>
-            <li>
-                <a href="/details/{{rec.id}}">{{rec['title']}}</a>
-            </li>
-        </ul>
-    {%endfor%}
+<article id="main">
+    <div class="container">
+        <!-- <h2>Search Results</h2> -->
+        <div id='card-favorite'>
+        {%for rec in fav_resp%}
+        
+                <div class="card">
+                    <a href="/details/{{rec.id}}">             
+                        <h4>{{rec['title']}}</h4>
+                        <img src="{{rec['image']}}" alt="{{rec['title']}}">
+                    </a>
 
-<div>
-    <button>
-        <i class="fa fa-thumbs-up"></i> 
-    </button>
-</div>
+                </div>
+                
+                
+                {%endfor%}
+            </div>
+    </div>
+</article>
 
-<div>
-    <a class = "btn-like" href="">Button</a>
-</div>
 
 {% endblock %}

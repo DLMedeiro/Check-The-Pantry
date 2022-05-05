@@ -232,35 +232,31 @@ def add_comment(rec_id):
     
     return render_template('comment_add.html', form = form)
 
-@app.route('/<int:recipe_id>/<int:comment_id>/edit_comments', methods = ['GET'])
-def edit_comment_form(recipe_id, comment_id):
-    """generate edit comment form"""
-
-    if not g.user:
-        flash("Access unauthorized.", "danger")
-        return redirect("/")
-
-    comment_data = Comment_Recipe.query.get_or_404(comment_id)
-    
-    return render_template('comment_edit.html', comment_data = comment_data, recipe_id = recipe_id)
-
-@app.route('/<int:recipe_id>/<int:comment_id>/edit_comments', methods = ['POST'])
+@app.route('/<int:recipe_id>/<int:comment_id>/edit_comments', methods = ['GET', 'POST'])
 def edit_comment(recipe_id, comment_id):
+    """generate edit comment form"""
     """edit comment"""
     """redirect to recipe detail page"""
 
+    form = CommentForm()
+    comment_data = Comment_Recipe.query.get(comment_id)
+    form.text.data = comment_data.comment_text
+
+    if form.validate_on_submit():
+
+        comment_text = form.text.data
+
+        comment_data.edit_comment(comment_text, comment_data.recipe_id, comment_data.user_id)
+        db.session.add(comment_data)
+        db.session.commit()
+
+        return redirect(f'/details/{recipe_id}')
+    
     if not g.user:
         flash("Access unauthorized.", "danger")
         return redirect("/")
-
-    comment_text = request.form['comment_text']
-    comment_data = Comment_Recipe.query.get(comment_id)
-
-    comment_data.edit_comment(comment_text, comment_data.recipe_id, comment_data.user_id)
-    db.session.add(comment_data)
-    db.session.commit()
-
-    return redirect(f'/details/{recipe_id}')
+    
+    return render_template('comment_edit.html', comment_data = comment_data, recipe_id = recipe_id, form = form)
     
 @app.route('/<int:recipe_id>/<int:comment_id>/delete_comments', methods = ['POST'])
 def delete_comment(recipe_id, comment_id):

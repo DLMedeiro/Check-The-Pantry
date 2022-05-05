@@ -23,13 +23,12 @@
     font-family: 'Staatliches', cursive;
     line-height: 1.3rem;
     margin: 1rem 0;
+    color: var(--color-dark);
   }
   h1 {
     font-size: 2rem;
   }
-  p {
-    margin-bottom:1rem;
-  }
+ 
   img {
     width: 100%;
       /* decreases size of images when creating the grid for the main content - without, grid is too big */
@@ -45,6 +44,7 @@
     --accent3: rgb(228, 232, 223);
     --accent4:#ff3700;
     --max-width: 1100px;
+    --half-width: 550px;
   } 
 
 
@@ -52,6 +52,12 @@
  /* Container */
  .container {
     max-width: var(--max-width);
+    /* overflow: hidden; */
+    margin: auto;
+    padding: 1rem 2rem;
+  }
+ .container-small {
+    max-width: var(--half-width);
     overflow: hidden;
     margin: auto;
     padding: 1rem 2rem;
@@ -84,7 +90,7 @@
     background: var(--accent3);
     color:var(--color-dark)
 }
-.btn-profile {
+.btn-profile, .btn-login, .btn-signup, .btn-comment-add{
     display: inline-block;
     padding: .5rem 1rem;
     border:var(--accent2) 1px solid;
@@ -127,7 +133,7 @@
     background: var(--accent2);
     color:var(--color-light);
 }
-.btn-primary:hover, .btn-comment:hover, .btn-profile:hover{
+.btn-primary:hover, .btn-comment:hover, .btn-profile:hover, .btn-login:hover, .btn-signup:hover, .btn-comment-add:hover{
     background: var(--accent2);
     color:var(--color-light);
 }
@@ -160,7 +166,7 @@
     transition: all 0.3s ease-in;
     color:var(--accent2)
 }
-.btn-delete{
+.btn-delete, .btn-register{
     display: inline-block;
     padding: .5rem 1rem;
     border:none;
@@ -172,8 +178,20 @@
     width: 100%;
     background-color: transparent;
 }
+.btn-register{
+    display: inline-block;
+    padding: .5rem 1rem;
+    border:none;
+    text-align: center;
+    font-size: 1rem;
+    text-decoration: none;
+    transition: all 0.3s ease-in;
+    color:var(--accent2);
+    width: 100%;
+    background-color: transparent;
+}
 
-.btn-delete:hover{
+.btn-delete:hover, .btn-register:hover{
     text-decoration: underline;
 }
 
@@ -270,7 +288,7 @@
     color:var(--color-dark);
   }
   
-  #search-results {
+  #search-results, #card-favorite {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-gap: 1rem;
@@ -289,16 +307,16 @@
   /* Comments */
 .showcase-container .comments{
     display:grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(1, 1fr);
       /* make room for an extra item */
-    justify-content: left;
+    justify-content: center;
+    /* height: 20vh; */
     align-items:center;
-    /* height:50vh; */
     /* overflow:hidden; */
   }
 
 .showcase-content .comments{
-    padding: 1rem;
+    padding: .5rem;
     z-index: 1;
     opacity:.9;
     }
@@ -315,7 +333,7 @@
     /* display block = pushes on to the next line */
   
     #profile-edit-form input, 
-    #profile-edit-form textarea {
+    #profile-edit-form textarea, #user_form input, #add-comment-form textarea {
       width:100%;
         /* Makes the boxes go all the way across */
       padding: 10px;
@@ -323,15 +341,19 @@
       border:1px #ddd solid;
         /* defines box line detail */
     }
+
+    #user_form input{
+        margin-bottom: 10px;
+    }
   
-    #profile-edit-form textarea {
-      height:200px;
+    #profile-edit-form textarea, #add-comment-form textarea {
+      height:100px;
     }
       /* increases the size of the free text area */
   
   /* Focus states of inpute (color around boxes when clicked */
     #profile-edit-form input:focus,
-    #profile-edit-form textarea:focus, #search_form input:focus {
+    #profile-edit-form textarea:focus, #search_form input:focus, #user_form input:focus, #add-comment-form textarea:focus {
       outline:none;
       border-color:var(--accent2);
     }

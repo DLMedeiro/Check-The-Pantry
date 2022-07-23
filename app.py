@@ -1,7 +1,7 @@
 from crypt import methods
 
 from wsgiref.util import application_uri
-import requests
+# import requests
 import os
 from types import MethodDescriptorType
 
@@ -135,9 +135,9 @@ def rec_details(rec_id):
     """Specific access for logged in and non logged users"""
     """list recipes ingredients and instructions"""
 
-    response2 = requests.get(f"https://api.spoonacular.com/recipes/{rec_id}/analyzedInstructions", params={'apiKey': apiKey})
+    response2 = request.get(f"https://api.spoonacular.com/recipes/{rec_id}/analyzedInstructions", params={'apiKey': apiKey})
     
-    response3 = requests.get(f"https://api.spoonacular.com/recipes/{rec_id}/information", params={'apiKey': apiKey, 'includeNutrition':'false'})
+    response3 = request.get(f"https://api.spoonacular.com/recipes/{rec_id}/information", params={'apiKey': apiKey, 'includeNutrition':'false'})
     
     res2 = response2.json()
     res3 = response3.json()
@@ -204,7 +204,7 @@ def show_favorites(user_id):
     fav_resp = []
 
     for id in favs_rec_id_list:
-        response3 = requests.get(f"https://api.spoonacular.com/recipes/{id}/information", params={'apiKey': apiKey, 'includeNutrition':'false'})
+        response3 = request.get(f"https://api.spoonacular.com/recipes/{id}/information", params={'apiKey': apiKey, 'includeNutrition':'false'})
         res3 = response3.json()
         fav_resp.append(res3)
 

@@ -4,59 +4,64 @@
 <head>
   <meta charset="UTF-8">
   <title>What's for Dinner?</title>
-
-  <link rel="stylesheet"
-        href="https://unpkg.com/bootstrap/dist/css/bootstrap.css">
+  
+  <link rel="stylesheet" href="/static/styles.css">
+  <!-- <link rel="stylesheet"
+        href="https://unpkg.com/bootstrap/dist/css/bootstrap.css"> -->
   <script src="https://unpkg.com/jquery"></script>
   <script src="https://unpkg.com/popper"></script>
   <script src="https://unpkg.com/bootstrap"></script>
 
   <link rel="stylesheet"
         href="https://use.fontawesome.com/releases/v5.3.1/css/all.css">
-  <!-- <link rel="stylesheet" href="/static/stylesheets/style.css"> -->
   <link rel="shortcut icon" href="/static/favicon.ico">
+
+  <link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css"
+  integrity="sha256-h20CPZ0QyXlBuAw7A+KluUYx/3pK+c7lYEpqLTlxjYQ="
+  crossorigin="anonymous"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Lato&family=Staatliches&display=swap" rel="stylesheet">
 </head>
 
 <body>
-<nav class="navbar navbar-expand">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <a href="/" class="navbar-brand">
-        <!-- <img src="/static/images/warbler-logo.png" alt="logo"> -->
-        <span>What's for Dinner?</span>
-      </a>
+  <nav id="navbar">
+		<div class="container">
+		  <a href="/" class = app_name>What's for Dinner?</a>
+
+      <ul class="nav-menu">
+        {% if not g.user %}
+        <div class="spacer">
+          <li><a href="/login">Log in</a></li>
+        </div>
+        {% else %}
+        <div class="spacer">
+          <li>
+            <a href="/profile">{{ g.user.username }}'s Profile</a>
+          </li>
+        </div>
+        <!-- remove user id from url -->
+        <div class="spacer">
+          <li><a href="/users/{{ g.user.id }}/favorites">Favorites</a></li>
+        </div>
+        <div class="spacer">
+          <li><a href="/logout">Log out</a></li>
+        </div>
+        {% endif %}
+      </ul>
+
     </div>
-    <ul class="nav navbar-nav navbar-right">
-      <!-- {% if request.endpoint != None %}
-      <li>
-        <form class="navbar-form navbar-right" action="/users">
-          <input name="q" class="form-control" placeholder="Search Warbler" id="search">
-          <button class="btn btn-default">
-            <span class="fa fa-search"></span>
-          </button>
-        </form>
-      </li>
-      {% endif %} -->
-      {% if not g.user %}
-      <li><a href="/login">Log in</a></li>
-      {% else %}
-      <li>
-        <a href="/users/{{ g.user.id }}">{{ g.user.username }}'s Profile"></a>
-      </li>
-      <li><a href="/favorites">Favorites</a></li>
-      <li><a href="/logout">Log out</a></li>
-      {% endif %}
-    </ul>
-  </div>
-</nav>
+  </nav>
+
 <div class="container">
   {% for category, message in get_flashed_messages(with_categories=True) %}
-  <div class="alert alert-{{ category }}">{{ message }}</div>
+    <div class="alert alert-{{ category }}">{{ message }}</div>
   {% endfor %}
 
   {% block content %}
   {% endblock %}
-
 </div>
+
 </body>
 </html>

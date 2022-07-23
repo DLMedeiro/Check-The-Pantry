@@ -1,4 +1,22 @@
 {% extends 'base.html' %}
 {% block content %}
-<!-- Registration Form -->
+
+
+<div class="py-3">
+  <div class="container-small">
+      <h2 class="join-message">Join Today!</h2>
+      <form method="POST" id="user_form">
+        {{ form.hidden_tag() }}
+  
+        {% for field in form if field.widget.input_type != 'hidden' %}
+          {% for error in field.errors %}
+            <span class="text-danger">{{ error }}</span>
+          {% endfor %}
+          {{ field(placeholder=field.label.text, class="form-control") }}
+        {% endfor %}
+  
+        <button class="btn-signup">Sign me up!</button>
+      </form>
+  </div>
+</div>
 {% endblock %}

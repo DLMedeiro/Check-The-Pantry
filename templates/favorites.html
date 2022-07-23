@@ -2,4 +2,28 @@
 {% block content %}
 <!-- saved recipes -->
 <!-- form to add or remove favorite -->
+
+<h1>{{user.username}}'s Favorite Recipes</h1>
+
+<article id="main">
+    <div class="container">
+        <!-- <h2>Search Results</h2> -->
+        <div id='card-favorite'>
+        {%for rec in fav_resp%}
+        
+                <div class="card">
+                    <a href="/details/{{rec.id}}">             
+                        <h4>{{rec['title']}}</h4>
+                        <img src="{{rec['image']}}" alt="{{rec['title']}}">
+                    </a>
+
+                </div>
+                
+                
+                {%endfor%}
+            </div>
+    </div>
+</article>
+
+
 {% endblock %}

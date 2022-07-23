@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div id="profile-edit-form" class="py-3">
+    <div class="container">
+      <h2 class="l-heading">Edit Your Profile.</h2>
+      <form method="POST" id="userEdit_form">
+        {{ form.hidden_tag() }}
+
+        {% for field in form%} 
+          {%if field.widget.input_type != 'hidden' and field.name != 'password' %}
+            {% for error in field.errors %}
+              <span class="text-danger">{{ error }}</span>
+            {% endfor %}
+            <p>
+              {{field.label}}
+
+              {%if field.widget.input_type != 'hidden' and field.name == 'email' %}
+              {{ form.email(value=user.email, class="form-control from-group") }}
+              {%endif%}
+
+              {%if field.widget.input_type != 'hidden' and field.name == 'username' %}
+              {{ form.username(value=user.username, class="form-control form-group") }}
+              {%endif%}
+
+            </p>
+          
+          {%endif%}
+        {% endfor %}
+
+       
+        {% if form.password.errors %}
+          {% for error in form.password.errors %}
+            <span class="text-danger">
+            {{ error }}
+            </span>
+          {% endfor %}
+          {% endif %}
+            <p>To confirm changes, enter your password</p>
+          {{ form.password(placeholder="Current Password", class="form-control form-group") }}
+
+        <div class="edit-btn-area">
+          <button class="btn-profile">Update Profile</button>
+        </div>
+      </form>
+      <div>
+        <form action="/">
+          <button class="btn-profile">Discard Changes</button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+
+<div>
+    <form method="POST" action="/delete_profile">
+        <button class="btn-delete">Delete Account</button>
+    </form>
+</div>
+
+
+{% endblock %}

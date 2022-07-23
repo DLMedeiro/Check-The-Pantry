@@ -8,4 +8,73 @@
 <!-- view comments -->
 <!-- add comment -->
 <!-- edit / remove comment -->
+
+<div class ='drk-container'>
+{%for r in res2%}
+    <h1>Recipe Name: {{res3['title']}}</h1>
+
+    <img src="{{res3['image']}}" alt="">
+
+    <h2>Ingredients</h2>
+        {%for i in res3.extendedIngredients%}
+            <ul>
+                <li>{{i.original}}</li>
+            </ul>
+        {%endfor%}
+            
+    <h2>Instructions</h2>
+        {%for s in res2%}
+            {%for ss in s['steps']%}
+                <ul>
+                    <li>{{ss.step}}</li>
+                </ul>
+            {%endfor%}
+        {%endfor%}
+</div>
+
+{%if g.user%}
+<!-- Favorites -->
+    <div>
+        <form method="POST" action="" class="fav_recipies">
+            <button class="
+                {{'btn-secondary' if res3['id'] in user_favs else 'btn-primary'}}">
+                <i class="fa fa-thumbs-up"></i> 
+            </button>
+        </form>
+    </div>
+
+<!-- Comments -->
+    <div class="container">
+        <div>
+            <h2 class="center-title">User Comments</h2>
+            <a class='btn-comment' href="/{{res3['id']}}/add_comments">Add comment</a>
+        </div>
+
+        <div class="container">
+            <div class="showcase-container comments">
+                {%for r in rec_comment_list%}
+                    <div class="showcase-content comments">
+                        <p> <b>{{r.user.username}}</b>: 
+                            {{r.comment_text}}
+                            {%if r.user_id == g.user.id%}
+                            <a class='btn-comment-edit' href="/{{r.recipe_id}}/{{r.id}}/edit_comments">(Edit Comment)</a>
+                            {%endif%}
+                        </p>
+                    </div>
+                    {%endfor%}
+                </div>
+            </div>
+
+        {%else%}
+            <div>
+                <h2>
+                    <a class = "btn-comment-edit" href="/login">Log in to view comments and save recipes</a>
+                </h2>
+            </div>
+        {%endif%}
+    </div>
+
+
+{%endfor%}
 {% endblock %}
+

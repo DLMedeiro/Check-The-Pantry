@@ -1,5 +1,39 @@
 {% extends 'base.html' %}
 {% block content %}
-<!-- Welcome user -->
-<!-- List of API recipes -->
+
+<section id = 'showcase'>
+    <div class="container">
+        <div class="showcase-container">
+            <div class="showcase-content">
+                <h1 class="join-message">Enter an ingredient to start your search</h1>
+          
+                <form id="search_form">
+                  {{ form.hidden_tag() }}
+          
+                      {% for field in form if field.widget.input_type != 'hidden' %}
+                          {% for error in field.errors %}
+                              <span class="text-danger">{{ error }}</span>
+                          {% endfor %}
+                          {{ form.Ingredient(value='', class="form-control") }}
+                      {% endfor %}
+          
+                      <button class="btn-search">Search</button>
+                  </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<article id="main">
+    <div class="container">
+        <!-- <h2>Search Results</h2> -->
+            <div id="search-results">
+                <!-- Div with link from Javascript file for results -->
+            </div>
+    </div>
+</article>
+
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="/static/recipe.js"></script>
+
 {% endblock %}

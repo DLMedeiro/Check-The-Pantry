@@ -20,15 +20,18 @@ load_dotenv()
 
 password = os.getenv('PASSWORD')
 apiKey = os.getenv('APIKEY')
+uri = os.getenv('DATABASE_URL')
 
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://postgres:{password}@localhost:5432/recipes_app'
+if uri.startswith("postgres://"):
+    uri = uri.replace("postgres://", "postgresql://", 1)
 
+app.config['SQLALCHEMY_DATABASE_URI'] = uri
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = False
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
-app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', "it's a secret")
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 toolbar = DebugToolbarExtension(app)
 
 connect_db(app)

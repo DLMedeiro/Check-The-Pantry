@@ -156,7 +156,7 @@ def homepage_search():
             search_q = form.Ingredient.data
 
             api_url = 'https://api.spoonacular.com/recipes/findByIngredients'
-            recipe_result = requests.get(api_url, params={'apiKey': apiKey,'ingredients': search_q, 'number': '2'})
+            recipe_result = requests.get(api_url, params={'apiKey': apiKey,'ingredients': search_q, 'number': '6'})
             recipe_results = recipe_result.json()
 
         except IntegrityError as e:

@@ -1,8 +1,9 @@
-from crypt import methods
+# from crypt import methods
 
 from wsgiref.util import application_uri
-# import requests
+import requests
 import os
+from dotenv import load_dotenv
 from types import MethodDescriptorType
 
 from flask import Flask, render_template, request, flash, redirect, session, g, abort
@@ -11,14 +12,18 @@ from sqlalchemy.exc import IntegrityError
 
 from forms import UserAddForm, LoginForm, RecipeSearch, CommentForm, UserEditForm
 from models import db, connect_db, User, Favorites, Comment_Recipe
-from secrets import apiKey
+# from secrets import apiKey
 
 CURR_USER_KEY = "curr_user"
 
+load_dotenv()
+
+password = os.getenv('PASSWORD')
+apiKey = os.getenv('APIKEY')
+
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = (
-    os.environ.get('DATABASE_URL', 'postgresql:///recipes-app'))
+app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://postgres:{password}@localhost:5432/recipes_app'
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = False
@@ -113,8 +118,9 @@ def logout():
     return redirect('/')
 
 @app.route('/')
-def homepage():
-    """Show list of top recipes - navigate to details page for each"""
+def homepage_load():
+    """Show homepage based on login status"""
+
 
     # Navbar specific for logged in vs not logged in
     if CURR_USER_KEY in session:
@@ -127,24 +133,57 @@ def homepage():
 
     return render_template('homepage.html', form = form)
 
+@app.route('/', methods = ["POST"])
+def homepage_search():
+    """Show list of top recipes based on search results"""
+
+
+    # Navbar specific for logged in vs not logged in
+    if CURR_USER_KEY in session:
+        g.user = User.query.get(session[CURR_USER_KEY])
+
+    else:
+        g.user = None
+
+    form = RecipeSearch()
+
+    if form.validate_on_submit():
+        try:
+            # search_q = request.args['Ingredient']
+            search_q = form.Ingredient.data
+
+            api_url = 'https://api.spoonacular.com/recipes/findByIngredients'
+            recipe_result = requests.get(api_url, params={'apiKey': apiKey,'ingredients': search_q, 'number': '2'})
+            recipe_results = recipe_result.json()
+
+        except IntegrityError as e:
+            flash("No results for your search", 'danger')
+            return render_template('homepage.html', form = form)
+
+        return render_template('homepage.html', recipe_results = recipe_results, form = form)
+
+    else:
+
+        return render_template('homepage.html', form = form)
+
 
 # Recipe Details Page
 
-@app.route('/details/<rec_id>')
+@app.route('/details/<int:rec_id>')
 def rec_details(rec_id):
     """Specific access for logged in and non logged users"""
     """list recipes ingredients and instructions"""
 
-    response2 = request.get(f"https://api.spoonacular.com/recipes/{rec_id}/analyzedInstructions", params={'apiKey': apiKey})
+    response2 = requests.get(f'https://api.spoonacular.com/recipes/{rec_id}/analyzedInstructions', params={'apiKey': apiKey})
     
-    response3 = request.get(f"https://api.spoonacular.com/recipes/{rec_id}/information", params={'apiKey': apiKey, 'includeNutrition':'false'})
+    response3 = requests.get(f'https://api.spoonacular.com/recipes/{rec_id}/information', params={'apiKey': apiKey, 'includeNutrition':'false'})
     
     res2 = response2.json()
     res3 = response3.json()
 
     # Logged in users can view and use comment and favorite features
-    """Show if recipe is on favories list - if logged in"""
-    """add / remove from favories list"""
+    """Show if recipe is on favorites list - if logged in"""
+    """add / remove from favorites list"""
     """view / add / edit comments"""
     if CURR_USER_KEY in session:
         g.user = User.query.get(session[CURR_USER_KEY])
@@ -204,7 +243,7 @@ def show_favorites(user_id):
     fav_resp = []
 
     for id in favs_rec_id_list:
-        response3 = request.get(f"https://api.spoonacular.com/recipes/{id}/information", params={'apiKey': apiKey, 'includeNutrition':'false'})
+        response3 = requests.get(f"https://api.spoonacular.com/recipes/{id}/information", params={'apiKey': apiKey, 'includeNutrition':'false'})
         res3 = response3.json()
         fav_resp.append(res3)
 

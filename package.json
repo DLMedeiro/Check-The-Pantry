@@ -1,0 +1,26 @@
+{
+  "name": "recipe_finder",
+  "version": "1.0.0",
+  "description": "**Try out the App Here: [*TBD*]()**",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DLMedeiro/Recipe_Finder.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DLMedeiro/Recipe_Finder/issues"
+  },
+  "homepage": "https://github.com/DLMedeiro/Recipe_Finder#readme",
+  "dependencies": {
+    "config": "^3.3.7",
+    "dotenv": "^16.0.1",
+    "require": "^0.4.4",
+    "requirejs": "^2.3.6"
+  }
+}

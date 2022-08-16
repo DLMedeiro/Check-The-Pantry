@@ -6,8 +6,8 @@
         <div class="showcase-container">
             <div class="showcase-content">
                 <h1 class="join-message">Enter an ingredient to start your search</h1>
-          
-                <form id="search_form">
+            
+                <form id="search_form" action="/" method="POST">
                   {{ form.hidden_tag() }}
           
                       {% for field in form if field.widget.input_type != 'hidden' %}
@@ -26,14 +26,34 @@
 
 <article id="main">
     <div class="container">
-        <!-- <h2>Search Results</h2> -->
-            <div id="search-results">
-                <!-- Div with link from Javascript file for results -->
-            </div>
+        <h2>Search Results</h2>
+        <div id="search-results">
+            {%for r in recipe_results%}
+                <div class='card'>
+                    <a href="/details/{{r.id}}">             
+                        <h4>{{r.title}}</h4>
+                        <img src="{{r.image}}" alt="{{r.title}}">
+                    </a>
+                </div>
+            {%endfor%}
+        </div>
     </div>
 </article>
 
+
+
+
+
+<!-- <article id="main">
+    <div class="container">
+        <h2>Search Results</h2>
+            <div id="search-results">
+                Div with link from Javascript file for results
+            </div>
+    </div>
+</article> -->
+
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<script src="/static/recipe.js"></script>
+<!-- <script src="/static/recipe.js"></script> -->
 
 {% endblock %}

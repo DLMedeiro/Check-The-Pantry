@@ -34,5 +34,7 @@ Documentation for Spoonacular can be found [here](https://spoonacular.com/food-a
     ``` (ipython) run app.py ```
      
     ``` (ipython) db.create_all() ```
+    
+    ``` (start virtual environment) env\Scripts\activate.bat ```
 
-    ``` flask run ```
+    ``` (venv) flask run ```

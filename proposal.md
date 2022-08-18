@@ -17,7 +17,9 @@ What data do you plan on using? You may have not picked your actual API yet, whi
 In brief, outline your approach to creating your project (knowing that you may not know everything in advance and that these details might change later). Answer questions like the ones below, but feel free to add more information:
 1. What does your database schema look like?
             
- >Database Models:
+ >Database Schema:
+
+    ![Schmema Design.](static\images\schema.PNG "Schema Design.")
 
    | Users          | Favorites  | Comment_recipe |
    | -------------  |----------  |-------------   |

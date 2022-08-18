@@ -19,7 +19,7 @@ In brief, outline your approach to creating your project (knowing that you may n
             
  >Database Schema:
 
-    ![Schmema Design.](schema.PNG "Schema Design.")
+    ![Schmema Design.](static/schema.PNG "Schema Design.")
 
    | Users          | Favorites  | Comment_recipe |
    | -------------  |----------  |-------------   |

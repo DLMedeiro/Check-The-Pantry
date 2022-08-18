@@ -19,16 +19,14 @@ In brief, outline your approach to creating your project (knowing that you may n
             
  >Database Schema:
 
-    ![Schmema Design.](static/schema.PNG "Schema Design.")
-
-   | Users          | Favorites  | Comment_recipe |
-   | -------------  |----------  |-------------   |
-   | id             | id         |id              |
-   | email          | recipe_id  |comment_text    |
-   | username       | user_id    |recipe_id       |
-   | password       | user*      |user_id         |
-   | favorites*     |            |user*           |
-   | user_comments* |            |                |       
+   | Users           | Favorites  | Comment_recipe  |
+   | -------------   |----------  |-------------    |
+   | id              | id         |id               |
+   | email           | recipe_id  |comment_text     |
+   | username        | user_id    |recipe_id        |
+   | password        | user*      |user_id          |
+   | *favorites*     |            |*user*           |
+   | *user_comments* |            |                 |       
    
  *Recipe IDs used to request ingredients and instructions from API |
 

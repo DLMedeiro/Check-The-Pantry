@@ -36,6 +36,9 @@ toolbar = DebugToolbarExtension(app)
 
 connect_db(app)
 
+db.drop_all()
+db.create_all()
+
 # User Sign up / Login / Logout
 
 @app.before_request
